@@ -106,7 +106,7 @@ setGemsButton.MouseButton1Click:Connect(function()
 	end
 end)
 
-local guiVisible = false
+local guiVisible = true
 local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 local onPos = UDim2.fromScale(0.34, 0.3)
 local offPos = UDim2.fromScale(0.34, -0.5)
