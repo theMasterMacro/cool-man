@@ -1,0 +1,125 @@
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "AdminCurrencyGui"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local main = Instance.new("Frame")
+main.Size = UDim2.fromScale(0.32, 0.4)
+main.Position = UDim2.fromScale(0.34, -0.5)
+main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+main.BorderSizePixel = 2
+main.BorderColor3 = Color3.fromRGB(60, 60, 60)
+main.Parent = gui
+
+main.Active = true
+main.Draggable = true
+
+local stroke = Instance.new("UIStroke")
+stroke.Color = Color3.fromRGB(80, 80, 80)
+stroke.Thickness = 2
+stroke.Parent = main
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.fromScale(1, 0.18)
+title.BackgroundTransparency = 1
+title.Text = "Currency Changer"
+title.Font = Enum.Font.GothamBold
+title.TextScaled = true
+title.TextColor3 = Color3.fromRGB(230, 230, 230)
+title.Parent = main
+
+local subtitle = Instance.new("TextLabel")
+subtitle.Size = UDim2.fromScale(1, 0.08)
+subtitle.Position = UDim2.fromScale(0, 0.16)
+subtitle.BackgroundTransparency = 1
+subtitle.Text = "Currency Control"
+subtitle.Font = Enum.Font.Gotham
+subtitle.TextScaled = true
+subtitle.TextColor3 = Color3.fromRGB(160, 160, 160)
+subtitle.Parent = main
+
+local function createInput(placeholder, yPos)
+	local box = Instance.new("TextBox")
+	box.Size = UDim2.fromScale(0.85, 0.14)
+	box.Position = UDim2.fromScale(0.075, yPos)
+	box.PlaceholderText = placeholder
+	box.Text = ""
+	box.ClearTextOnFocus = false
+	box.Font = Enum.Font.Gotham
+	box.TextScaled = true
+	box.BackgroundColor3 = Color3.fromRGB(35, 35, 38)
+	box.TextColor3 = Color3.fromRGB(220, 220, 220)
+	box.BorderSizePixel = 2
+	box.BorderColor3 = Color3.fromRGB(80, 80, 80)
+	box.Parent = main
+	return box
+end
+
+local cashBox = createInput("Set Cash Amount", 0.32)
+local gemsBox = createInput("Set Gems Amount", 0.5)
+
+local function createButton(text, yPos)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.fromScale(0.6, 0.14)
+	btn.Position = UDim2.fromScale(0.2, yPos)
+	btn.Text = text
+	btn.Font = Enum.Font.GothamBold
+	btn.TextScaled = true
+	btn.BackgroundColor3 = Color3.fromRGB(0, 120, 230)
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.BorderSizePixel = 2
+	btn.BorderColor3 = Color3.fromRGB(70, 70, 70)
+	btn.Parent = main
+	return btn
+end
+
+local setCashButton = createButton("SET CASH", 0.7)
+local setGemsButton = createButton("SET GEMS", 0.86)
+
+setCashButton.MouseButton1Click:Connect(function()
+	local amount = tonumber(cashBox.Text)
+	if not amount then return end
+	local leaderstats = player:FindFirstChild("leaderstats")
+	if leaderstats then
+		local cash = leaderstats:FindFirstChild("Cash")
+		if cash and cash:IsA("IntValue") then
+			cash.Value = amount
+		end
+	end
+end)
+
+setGemsButton.MouseButton1Click:Connect(function()
+	local amount = tonumber(gemsBox.Text)
+	if not amount then return end
+	local values = player:FindFirstChild("Values")
+	if values then
+		local gems = values:FindFirstChild("Gems")
+		if gems and gems:IsA("IntValue") then
+			gems.Value = amount
+		end
+	end
+end)
+
+local guiVisible = false
+local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local onPos = UDim2.fromScale(0.34, 0.3)
+local offPos = UDim2.fromScale(0.34, -0.5)
+
+local toggleTween = function()
+	guiVisible = not guiVisible
+	local goal = {Position = guiVisible and onPos or offPos}
+	TweenService:Create(main, tweenInfo, goal):Play()
+end
+
+UserInputService.InputBegan:Connect(function(input, gp)
+	if gp then return end
+	if input.KeyCode == Enum.KeyCode.K then
+		toggleTween()
+	end
+end)
