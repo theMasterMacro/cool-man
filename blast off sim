@@ -11,7 +11,7 @@ gui.Parent = player:WaitForChild("PlayerGui")
 
 local main = Instance.new("Frame")
 main.Size = UDim2.fromScale(0.32, 0.4)
-main.Position = UDim2.fromScale(0.34, -0.5)
+main.Position = UDim2.fromScale(0.34, 0.3)
 main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 main.BorderSizePixel = 2
 main.BorderColor3 = Color3.fromRGB(60, 60, 60)
